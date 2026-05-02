@@ -1,0 +1,40 @@
+# Secrets — must never be committed
+.env
+.env.*
+!.env.example
+.deploy-secret
+
+# SSH / private keys (defensive — the real keys live in ~/.ssh, not here,
+# but if one ever accidentally lands inside the project, don't commit it)
+*.pem
+*.key
+id_rsa
+id_dsa
+id_ecdsa
+id_ed25519
+*_rsa
+*_dsa
+*_ecdsa
+*_ed25519
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# macOS / editor / OS junk
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Build / temp output
+dist/
+build/
+.cache/
+
+# Server-side logs (e.g. if _deploy.log is ever pulled down for debugging)
+*.log
+_deploy.log
