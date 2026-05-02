@@ -35,6 +35,9 @@ dist/
 build/
 .cache/
 
+# iPhone screenshots dropped in for debugging (large PNGs, not source-controlled)
+screens/
+
 # Server-side logs (e.g. if _deploy.log is ever pulled down for debugging)
 *.log
 _deploy.log
