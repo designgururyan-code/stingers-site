@@ -588,7 +588,7 @@ a{color:inherit;text-decoration:none}
 
   /* Headline: drop the hard break so "You need to be there." flows after "fit." */
   .recruit__title br{display:none}
-  .recruit__title{max-width:none}
+  .recruit__title{max-width:none;font-size:clamp(28px,8vw,40px);line-height:1.06}
 
   /* Numbered cards: number sits to LEFT of title/copy on mobile (was stacked above) */
   .bring-card{
@@ -689,7 +689,8 @@ a{color:inherit;text-decoration:none}
   .about{overflow-x:hidden}
   .about__inner{max-width:100vw;box-sizing:border-box}
   .about__split,.about__copy{min-width:0;max-width:100%}
-  .about__title{font-size:clamp(32px,7.2vw,40px);max-width:100%;overflow-wrap:break-word}
+  .about__title{font-size:clamp(28px,8vw,40px);max-width:none;line-height:1.05}
+  .about__title br{display:none}
   .about__body{font-size:15px;max-width:100%;overflow-wrap:break-word;word-break:break-word}
   .about__body p{max-width:100%}
   .about__photo{max-width:100%}
@@ -771,8 +772,8 @@ a{color:inherit;text-decoration:none}
 
   /* Swipe affordance below the slider — only on mobile */
   .about__cards-hint{
-    display:flex;align-items:center;justify-content:center;gap:10px;
-    margin:18px auto 0;
+    display:flex;align-items:center;justify-content:flex-start;gap:10px;
+    margin:36px 0 0 24px;
     font-family:var(--mono);font-size:10.5px;font-weight:500;
     letter-spacing:.22em;text-transform:uppercase;
     color:var(--or);opacity:.85;
@@ -926,6 +927,9 @@ a{color:inherit;text-decoration:none}
   letter-spacing:-.025em;line-height:1.02;
   color:var(--ink);
   max-width:14ch;
+}
+@media (max-width:680px){
+  .join__title{font-size:clamp(28px,8vw,40px);max-width:none;line-height:1.06}
 }
 .join__title .em{
   background:linear-gradient(108deg, var(--ord) 0%, var(--or) 50%, var(--ord) 100%);
