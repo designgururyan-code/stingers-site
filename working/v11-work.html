@@ -1100,6 +1100,9 @@ a{color:inherit;text-decoration:none}
   color:var(--ink);
   max-width:14ch;
 }
+@media (max-width:680px){
+  .sponsors__title{font-size:clamp(28px,8vw,40px);line-height:1.06;max-width:none}
+}
 .sponsors__title .em{
   background:linear-gradient(108deg, var(--ord) 0%, var(--or) 50%, var(--ord) 100%);
   background-size:280% 100%;
@@ -1243,10 +1246,10 @@ a{color:inherit;text-decoration:none}
 .footer__col a:hover::before{width:10px}
 .footer__col p{
   font-family:var(--sans);font-size:13.5px;color:var(--dim);
-  line-height:1.55;margin:0;
+  line-height:1.4;margin:0;
 }
 .footer__col p + p{margin-top:11px}
-.footer__col__email{
+.footer__col a.footer__col__email{
   font-family:var(--mono);font-size:12px;
   color:var(--cy);text-decoration:none;
   letter-spacing:.02em;
@@ -1254,8 +1257,8 @@ a{color:inherit;text-decoration:none}
   display:inline-block;
   word-break:break-all;
 }
-.footer__col__email::before{display:none}
-.footer__col__email:hover{color:var(--cyl)}
+.footer__col a.footer__col__email::before{display:none}
+.footer__col a.footer__col__email:hover{color:var(--cyl)}
 .footer__bottom{
   border-top:1px solid var(--line);
   padding:24px 0 28px;
