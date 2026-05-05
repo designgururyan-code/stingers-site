@@ -110,6 +110,22 @@ Use instead:
 
 Workflow for ongoing work: edit `working/v11-work.html` → `git push` (Pages auto-deploys) → optionally also `_deploy.php` push to `/sting/` for the canonical live preview.
 
+## Footer mobile (2026-05-05)
+
+After several rounds of iteration the footer landed in a clean 2×2-below-brand
+layout with these specifics:
+
+- Section padding: `clamp(72px,14vw,120px) 24px` on mobile (matches Recruit/About).
+- Brand block: spans both columns; logo→name 24px, name→tag 12px, brand→cols 48px.
+- 4 link/info columns in 2×2:
+  - Row 1: Navigation (Players/Games/Gallery/Club Song — Home dropped) | Training (Wed 5pm / Watson's Oval #2, Manunda / Check socials).
+  - Row 2: Get Involved (Registration / Sponsorship) | Contact (President Greg Lees / "Email us").
+  - Heading→first item 16px, item→item 12px (uniform across nav `<ul>` gap and `p + p` margin).
+  - Tick marks ONLY on `.footer__col-head` — never on `<a>` or `<p>` (orange dash on hovered nav links was sticking on iOS Safari, making "Games" look permanently active).
+- Bottom row: social icons LEFT, © RIGHT, single row. `.footer__bottom { flex-direction:row-reverse; justify-content:space-between }`. `<360px` fallback to `flex-wrap:wrap`.
+- Section divider above bottom row: `1px rgba(0,180,230,0.12)` cyan (matching all major section dividers; was white at 8%).
+- Email link: brand cyan `var(--cy)` at `(0,2,1)` specificity (`.footer__col a.footer__col__email`) so it beats the more-specific generic `.footer__col a` color rule.
+
 ## Caching gotcha
 
 `/sting/.htaccess` is correctly configured (`Cache-Control "public, max-age=0, must-revalidate"` for `.html`), but **SiteGround's NGINX Direct Delivery / Dynamic Cache layer overrides it** — confirmed via `x-proxy-cache-info: DT:1` header on responses, and the live response sending `cache-control: max-age=15552000` despite the `.htaccess`. NGINX serves static HTML directly without going through Apache, so `.htaccess` `Header` directives don't reach the response.
