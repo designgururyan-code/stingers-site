@@ -1297,6 +1297,14 @@ a{color:inherit;text-decoration:none}
     padding-bottom:48px;
   }
   .footer__brand{grid-column:1 / -1}
+  /* Training (4th child) and Contact (5th child) both span full width and
+     read as one "Find us" block. Contact heading hidden — email speaks for itself. */
+  .footer__top > :nth-child(4),
+  .footer__top > :nth-child(5){grid-column:1 / -1}
+  .footer__top > :nth-child(5){margin-top:-16px}
+  .footer__top > :nth-child(5) > .footer__col-head{display:none}
+  /* Email more prominent in the new "Find us" position */
+  .footer__col__email{font-size:14px;padding:8px 0;min-height:44px}
   .footer__brand{gap:14px}
   .footer__brand img{width:56px}
   .footer__brand-tag{font-size:13px;max-width:36ch}
