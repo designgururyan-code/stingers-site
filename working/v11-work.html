@@ -1248,7 +1248,7 @@ a{color:inherit;text-decoration:none}
 .footer__col p + p{margin-top:8px}
 .footer__col__email{
   font-family:var(--mono);font-size:12px;
-  color:var(--cyl);text-decoration:none;
+  color:var(--cy);text-decoration:none;
   letter-spacing:.02em;
   border-bottom:1px solid rgba(0,180,230,.25);
   padding-bottom:1px;
@@ -1256,7 +1256,8 @@ a{color:inherit;text-decoration:none}
   display:inline-block;margin-top:4px;
   word-break:break-all;
 }
-.footer__col__email:hover{color:var(--cy);border-color:var(--cy)}
+.footer__col__email::before{display:none}
+.footer__col__email:hover{color:var(--cyl);border-color:var(--cy)}
 .footer__bottom{
   border-top:1px solid var(--line);
   padding:24px 0 28px;
@@ -1291,10 +1292,11 @@ a{color:inherit;text-decoration:none}
 @media (max-width:560px){
   .footer{padding-top:64px}
   .footer__top{
-    grid-template-columns:1fr;
-    gap:40px;
+    grid-template-columns:1fr 1fr;
+    gap:32px 24px;
     padding-bottom:48px;
   }
+  .footer__brand{grid-column:1 / -1}
   .footer__brand{gap:14px}
   .footer__brand img{width:56px}
   .footer__brand-tag{font-size:13px;max-width:36ch}
@@ -1600,7 +1602,7 @@ a{color:inherit;text-decoration:none}
       <h1 class="wordmark"><span class="line1">Bring the</span><span class="em swap" id="emWord">work</span></h1>
       <div class="subhead">
         <p class="tagline swap" id="tagline">Pre-season hamstring testers, the mid-week workout.</p>
-        <div class="meta swap" id="meta"><span><b>Wed 5–6pm</b></span><span class="pip"></span><span>Watson's Oval #2</span><span class="pip"></span><span>Cairns North</span></div>
+        <div class="meta swap" id="meta"><span><b>Wed 5–6pm</b></span><span class="pip"></span><span>Watson's Oval #2</span><span class="pip"></span><span>Manunda</span></div>
       </div>
     </div>
 
@@ -1633,7 +1635,7 @@ a{color:inherit;text-decoration:none}
           <span class="card__num">First up</span>
           <h2 class="card__wordmark">Bring<br>the <span class="em">work</span></h2>
           <p class="card__tagline">Pre-season hamstring testers, the mid-week workout.</p>
-          <div class="card__meta"><span><b>Wed 5–6pm</b></span><span class="pip"></span><span>Watson's Oval #2</span><span class="pip"></span><span>Cairns North</span></div>
+          <div class="card__meta"><span><b>Wed 5–6pm</b></span><span class="pip"></span><span>Watson's Oval #2</span><span class="pip"></span><span>Manunda</span></div>
         </div>
       </article>
       <article class="swiper-slide card" data-chapter="1" data-swiper-slide-index="1" role="group" aria-label="2 / 3">
@@ -1981,7 +1983,7 @@ a{color:inherit;text-decoration:none}
   const CHAPTERS = [
     {num:"01", name:"Train", em:"work",
      tag:"Pre-season hamstring testers, the mid-week workout.",
-     meta:'<span><b>Wed 5–6pm</b></span><span class="pip"></span><span>Watson\'s Oval #2</span><span class="pip"></span><span>Cairns North</span>'},
+     meta:'<span><b>Wed 5–6pm</b></span><span class="pip"></span><span>Watson\'s Oval #2</span><span class="pip"></span><span>Manunda</span>'},
     {num:"02", name:"Play", em:"sting",
      tag:"Games throughout the season in FNQ, from Cairns to Mackay.",
      meta:'<a href="/games/" class="meta-link"><span>See full fixture</span><span class="arrow">→</span></a>'},
