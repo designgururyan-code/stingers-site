@@ -2723,13 +2723,20 @@ a{color:inherit;text-decoration:none}
     slider.addEventListener('scroll', () => {
       clearTimeout(t);
       t = setTimeout(() => {
-        const head = slider.querySelector('[data-clone="head"]');
-        const tail = slider.querySelector('[data-clone="tail"]');
-        if (!head || !tail) return;
-        if (slider.scrollLeft <= head.offsetLeft + 8) {
-          jumpTo(cards[cards.length - 1].offsetLeft - padLeft());
-        } else if (slider.scrollLeft >= tail.offsetLeft - 8) {
-          jumpTo(cards[0].offsetLeft - padLeft());
+        // Use card boundaries — not clone offsets — because the tail clone
+        // sits past the maximum scrollable position (content is wider than
+        // the viewport allows scrollLeft to reach). Trigger when scroll
+        // crosses the midpoint of the last real card going forward, or the
+        // midpoint of the first going backward.
+        const cardW = cards[0].offsetWidth;
+        if (!cardW) return;
+        const half = cardW / 2;
+        const firstRealLeft = cards[0].offsetLeft;
+        const lastRealLeft = cards[cards.length - 1].offsetLeft;
+        if (slider.scrollLeft > lastRealLeft + half) {
+          jumpTo(firstRealLeft);
+        } else if (slider.scrollLeft < firstRealLeft - half) {
+          jumpTo(lastRealLeft);
         }
       }, 60);
     }, { passive: true });
