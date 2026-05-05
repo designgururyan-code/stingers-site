@@ -102,6 +102,14 @@ Use instead:
 
 **Rule:** never `cat`/`Read` `_deploy.php` from the live server in chat. The local `working/_deploy.php` is safe — secret is `__REPLACE_ON_SERVER__`.
 
+## Public preview URLs
+
+- **Persistent (recommended for sharing)**: `https://designgururyan-code.github.io/stingers-site/` — GitHub Pages, deployed by `.github/workflows/pages.yml` on every push to `main`. Public repo at `github.com/designgururyan-code/stingers-site`. Cache headers are GH-Pages defaults (~10 min revalidation). Each commit triggers a fresh build that's live within ~30–60 sec.
+- **Live preview on the real domain**: `https://cairnsstingers.com.au/sting/index.html` — pushed via `_deploy.php` (X-Auth from `.env`). Subject to SiteGround NGINX caching (180-day, requires manual flush per deploy unless `/sting/` is excluded from Dynamic Cache in Site Tools).
+- **Ephemeral local-tunnel** (for active iteration on a Mac with Python http.server + cloudflared): URL is regenerated each session. Used during pair-debugging when neither of the above is responsive enough.
+
+Workflow for ongoing work: edit `working/v11-work.html` → `git push` (Pages auto-deploys) → optionally also `_deploy.php` push to `/sting/` for the canonical live preview.
+
 ## Caching gotcha
 
 `/sting/.htaccess` is correctly configured (`Cache-Control "public, max-age=0, must-revalidate"` for `.html`), but **SiteGround's NGINX Direct Delivery / Dynamic Cache layer overrides it** — confirmed via `x-proxy-cache-info: DT:1` header on responses, and the live response sending `cache-control: max-age=15552000` despite the `.htaccess`. NGINX serves static HTML directly without going through Apache, so `.htaccess` `Header` directives don't reach the response.
