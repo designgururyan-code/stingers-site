@@ -1245,19 +1245,17 @@ a{color:inherit;text-decoration:none}
   font-family:var(--sans);font-size:13.5px;color:var(--dim);
   line-height:1.55;margin:0;
 }
-.footer__col p + p{margin-top:8px}
+.footer__col p + p{margin-top:11px}
 .footer__col__email{
   font-family:var(--mono);font-size:12px;
   color:var(--cy);text-decoration:none;
   letter-spacing:.02em;
-  border-bottom:1px solid rgba(0,180,230,.25);
-  padding-bottom:1px;
-  transition:color .2s ease,border-color .2s ease;
-  display:inline-block;margin-top:4px;
+  transition:color .2s ease;
+  display:inline-block;
   word-break:break-all;
 }
 .footer__col__email::before{display:none}
-.footer__col__email:hover{color:var(--cyl);border-color:var(--cy)}
+.footer__col__email:hover{color:var(--cyl)}
 .footer__bottom{
   border-top:1px solid var(--line);
   padding:24px 0 28px;
@@ -1303,8 +1301,8 @@ a{color:inherit;text-decoration:none}
   .footer__top > :nth-child(5){grid-column:1 / -1}
   .footer__top > :nth-child(5){margin-top:-16px}
   .footer__top > :nth-child(5) > .footer__col-head{display:none}
-  /* Email more prominent in the new "Find us" position */
-  .footer__col__email{font-size:14px;padding:8px 0;min-height:44px}
+  /* Email more prominent in the new "Find us" position; tight to the line above */
+  .footer__col__email{font-size:14px;padding:6px 0 8px;min-height:44px;margin-top:0}
   .footer__brand{gap:14px}
   .footer__brand img{width:56px}
   .footer__brand-tag{font-size:13px;max-width:36ch}
@@ -1942,7 +1940,7 @@ a{color:inherit;text-decoration:none}
 
       <div class="footer__col">
         <h3 class="footer__col-head">Contact</h3>
-        <p>President <strong style="color:var(--ink);font-weight:600">Greg Lees</strong></p>
+        <p>President Greg Lees</p>
         <a class="footer__col__email" href="mailto:cairnsstingers@gmail.com">cairnsstingers@gmail.com</a>
       </div>
 
