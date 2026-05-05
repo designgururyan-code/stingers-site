@@ -759,16 +759,16 @@ a{color:inherit;text-decoration:none}
     box-sizing:border-box;
     min-width:0;
   }
-  .moment-card__photo{
-    aspect-ratio:5/4;
-    max-height:45vh;
+  .about__cards .moment-card__photo{
+    aspect-ratio:4/5;
+    max-height:60vh;
     margin-bottom:18px;
     overflow:hidden;
   }
-  .moment-card__photo img{
+  .about__cards .moment-card__photo img{
     width:100%;
     height:100%;
-    max-height:45vh;
+    max-height:60vh;
     object-fit:cover;
   }
   .moment-card p{max-width:none}
@@ -2686,14 +2686,29 @@ a{color:inherit;text-decoration:none}
 
 
 <script>
-// Patch 5: Mobile horizontal slider for .about__cards (scroll-snap + clone-edges infinite loop)
+// Mobile carousel: clone-edges infinite loop using scroll-position math.
+// Replaces the prior scroll-snap-type toggle approach with the recipe
+// recommended in user diagnosis — isJumping flag, scroll-behavior:auto
+// during the jump, rAF-throttled scroll listener.
 (function(){
   const slider = document.querySelector('.about__cards');
   if (!slider) return;
   const cards = Array.from(slider.querySelectorAll('.moment-card'));
   if (cards.length < 2) return;
   const mq = window.matchMedia('(max-width:560px)');
+
   let cloned = false;
+  let isJumping = false;
+  let scrollScheduled = false;
+  let userInteractingUntil = 0;
+
+  // Card width INCLUDING the slider's gap (recipe expects this for clean math)
+  function cardW(){
+    const styles = getComputedStyle(slider);
+    const gap = parseFloat(styles.gap || styles.columnGap || 0);
+    return cards[0].getBoundingClientRect().width + gap;
+  }
+
   function setup(){
     if (cloned || !mq.matches) return;
     cloned = true;
@@ -2706,90 +2721,94 @@ a{color:inherit;text-decoration:none}
     });
     firstClone.dataset.clone = 'tail';
     lastClone .dataset.clone = 'head';
+    // Final DOM order: [head=clone-of-last, real-1, real-2, real-3, real-4, tail=clone-of-first]
     slider.insertBefore(lastClone, cards[0]);
     slider.appendChild(firstClone);
-    const padLeft = () => parseInt(getComputedStyle(slider).paddingLeft) || 0;
-    requestAnimationFrame(() => { slider.scrollLeft = cards[0].offsetLeft - padLeft(); });
-    function jumpTo(x){
-      // Briefly disable snap so iOS doesn't fight the instant jump
-      const saved = slider.style.scrollSnapType;
-      slider.style.scrollSnapType = 'none';
-      slider.scrollLeft = x;
-      requestAnimationFrame(() => {
-        slider.style.scrollSnapType = saved || '';
-      });
-    }
-    let t;
-    slider.addEventListener('scroll', () => {
-      clearTimeout(t);
-      t = setTimeout(() => {
-        // Use card boundaries — not clone offsets — because the tail clone
-        // sits past the maximum scrollable position (content is wider than
-        // the viewport allows scrollLeft to reach). Trigger when scroll
-        // crosses the midpoint of the last real card going forward, or the
-        // midpoint of the first going backward.
-        const cardW = cards[0].offsetWidth;
-        if (!cardW) return;
-        const half = cardW / 2;
-        const firstRealLeft = cards[0].offsetLeft;
-        const lastRealLeft = cards[cards.length - 1].offsetLeft;
-        if (slider.scrollLeft > lastRealLeft + half) {
-          jumpTo(firstRealLeft);
-        } else if (slider.scrollLeft < firstRealLeft - half) {
-          jumpTo(lastRealLeft);
-        }
-      }, 60);
-    }, { passive: true });
+    // Initial position: real card 1 (sl = cardWidth + gap, i.e. one slot past head clone)
+    requestAnimationFrame(() => { slider.scrollLeft = cardW(); });
   }
   setup();
   mq.addEventListener('change', setup);
 
-  // Slider dots indicator — updates as the user scrolls; works regardless of clones
-  const dotsEl = document.querySelector('.about__cards-dots');
-  if (dotsEl) {
-    const dots = dotsEl.querySelectorAll('span');
-    function updateDots(){
-      if (!mq.matches || dots.length === 0) return;
-      const viewportCenter = slider.scrollLeft + slider.clientWidth / 2;
-      let closestIdx = 0;
-      let closestDist = Infinity;
-      cards.forEach((card, i) => {
-        const center = card.offsetLeft + card.offsetWidth / 2;
-        const dist = Math.abs(center - viewportCenter);
-        if (dist < closestDist) { closestDist = dist; closestIdx = i; }
+  // Loop detection + dot update — single rAF-throttled handler on scroll
+  function onScrollFrame(){
+    scrollScheduled = false;
+    if (!mq.matches) return;
+    if (isJumping) return;
+    const cw = cardW();
+    if (!cw) return;
+    const sl = slider.scrollLeft;
+    const total = cards.length;
+
+    // Loop detection: jumps are instant via scroll-behavior:auto so the user
+    // never sees a rewind animation
+    if (sl < cw * 0.5) {
+      // On left clone (visually card 4) → jump to real card 4
+      isJumping = true;
+      const sb = slider.style.scrollBehavior;
+      slider.style.scrollBehavior = 'auto';
+      slider.scrollLeft = cw * total;
+      requestAnimationFrame(() => {
+        slider.style.scrollBehavior = sb || '';
+        isJumping = false;
       });
-      dots.forEach((d, i) => d.classList.toggle('is-active', i === closestIdx));
+      return;
     }
-    slider.addEventListener('scroll', updateDots, { passive: true });
-    requestAnimationFrame(updateDots);
+    if (sl > cw * (total + 0.5)) {
+      // On right clone (visually card 1) → jump to real card 1
+      isJumping = true;
+      const sb = slider.style.scrollBehavior;
+      slider.style.scrollBehavior = 'auto';
+      slider.scrollLeft = cw;
+      requestAnimationFrame(() => {
+        slider.style.scrollBehavior = sb || '';
+        isJumping = false;
+      });
+      return;
+    }
+
+    // Dots — closest real card to viewport center
+    const dotsEl = document.querySelector('.about__cards-dots');
+    if (dotsEl) {
+      const dots = dotsEl.querySelectorAll('span');
+      if (dots.length) {
+        const viewportCenter = sl + slider.clientWidth / 2;
+        let closestIdx = 0, closestDist = Infinity;
+        cards.forEach((card, i) => {
+          const center = card.offsetLeft + card.offsetWidth / 2;
+          const dist = Math.abs(center - viewportCenter);
+          if (dist < closestDist) { closestDist = dist; closestIdx = i; }
+        });
+        dots.forEach((d, i) => d.classList.toggle('is-active', i === closestIdx));
+      }
+    }
   }
 
-  // Slider autoplay — single always-on interval. Each tick decides whether
-  // to actually advance based on viewport, mobile, tab visibility, and recent
-  // user interaction. Simpler and harder to break than the prior version.
-  let userInteractingUntil = 0;
+  slider.addEventListener('scroll', () => {
+    if (scrollScheduled) return;
+    scrollScheduled = true;
+    requestAnimationFrame(onScrollFrame);
+  }, { passive: true });
+  requestAnimationFrame(onScrollFrame);
+
+  // Autoplay — single always-on interval, gated on viewport/visibility/touch
   function isSliderInViewport(){
     const r = slider.getBoundingClientRect();
     return r.top < window.innerHeight * 0.85 && r.bottom > window.innerHeight * 0.15;
   }
-  function autoplayTick(){
-    if (!mq.matches) return;                          // desktop → skip
-    if (document.hidden) return;                      // tab in background → skip
-    if (Date.now() < userInteractingUntil) return;    // user touched recently → skip
-    if (!isSliderInViewport()) return;                // slider off-screen → skip
-    const cardWidth = cards[0].offsetWidth;
-    if (!cardWidth) return;
-    // Advance to next card based on current scroll position (more reliable
-    // than scrollBy, which can compound during smooth-scroll animations).
-    const currentIdx = Math.round(slider.scrollLeft / cardWidth);
-    const targetLeft = (currentIdx + 1) * cardWidth;
+  setInterval(() => {
+    if (!mq.matches) return;
+    if (document.hidden) return;
+    if (Date.now() < userInteractingUntil) return;
+    if (!isSliderInViewport()) return;
+    if (isJumping) return;
+    const cw = cardW();
+    if (!cw) return;
+    // Advance one slot forward via smooth scroll
+    const targetLeft = slider.scrollLeft + cw;
     slider.scrollTo({ left: targetLeft, behavior: 'smooth' });
-  }
-  setInterval(autoplayTick, 4000);
-  // Direct slider interaction pauses autoplay for 7s
-  function flagUserInteraction(){
-    userInteractingUntil = Date.now() + 7000;
-  }
+  }, 4000);
+  function flagUserInteraction(){ userInteractingUntil = Date.now() + 7000; }
   ['touchstart', 'mousedown'].forEach(evt => {
     slider.addEventListener(evt, flagUserInteraction, { passive: true });
   });
