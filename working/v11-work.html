@@ -1240,22 +1240,13 @@ a{color:inherit;text-decoration:none}
   display:inline-flex;align-items:center;gap:6px;
 }
 .footer__col a:hover{color:var(--ink)}
-.footer__col a::before{
-  content:"";width:0;height:1px;background:var(--or);
-  transition:width .25s cubic-bezier(.2,.7,.2,1);
-}
-.footer__col a:hover::before{width:10px}
+/* Tick marks are reserved for column HEADERS only — link items and info paragraphs are plain */
+.footer__col a::before{display:none}
 .footer__col p{
   font-family:var(--sans);font-size:13.5px;color:var(--dim);
   line-height:1.4;margin:0;
-  padding-left:16px;position:relative;
 }
-/* Match the orange-line affordance the nav links have (visible always for info items) */
-.footer__col p::before{
-  content:"";
-  position:absolute;left:0;top:.65em;
-  width:10px;height:1px;background:var(--or);opacity:.55;
-}
+.footer__col a{gap:0}
 .footer__col p + p{margin-top:11px}
 .footer__col a.footer__col__email{
   font-family:var(--mono);font-size:12px;
@@ -1268,7 +1259,7 @@ a{color:inherit;text-decoration:none}
 .footer__col a.footer__col__email::before{display:none}
 .footer__col a.footer__col__email:hover{color:var(--cyl)}
 .footer__bottom{
-  border-top:1px solid var(--line);
+  border-top:1px solid rgba(0,180,230,0.12);
   padding:24px 0 28px;
   display:flex;align-items:center;justify-content:space-between;
   gap:20px;flex-wrap:wrap;
@@ -1298,30 +1289,47 @@ a{color:inherit;text-decoration:none}
   .footer__top{grid-template-columns:1fr 1fr;gap:48px 32px}
   .footer__brand{grid-column:1 / -1}
 }
+@media (max-width:680px){
+  /* PATCH 4: section padding rhythm matching other sections (Recruit, About) */
+  .footer{padding:clamp(72px,14vw,120px) 24px}
+}
 @media (max-width:560px){
-  .footer{padding-top:64px}
+  .footer{padding-top:clamp(72px,14vw,120px)}
   .footer__top{
     grid-template-columns:1fr 1fr;
-    gap:32px 24px;
-    padding-bottom:48px;
+    gap:40px 24px;            /* PATCH 4: 40px between column-rows */
+    padding-bottom:48px;       /* 48px breathing above the cyan rule */
   }
   .footer__brand{grid-column:1 / -1}
-  /* Clean 2×2 below brand: Nav | Training, then Get Involved | Contact */
-  /* Email tighter to its line, sized for tap target */
-  .footer__col__email{font-size:14px;padding:6px 0 8px;min-height:44px;margin-top:0}
-  .footer__brand{gap:14px}
-  .footer__brand img{width:56px}
-  .footer__brand-tag{font-size:13px;max-width:36ch}
-  .footer__col-head{font-size:9.5px;margin-bottom:14px}
-  .footer__col ul{gap:11px}
-  .footer__col p + p{margin-top:11px}
+  /* Brand internal spacing: logo→name 24px, name→tag 12px */
+  .footer__brand{gap:0;margin-bottom:8px}  /* +8 on top of grid 40 = 48px brand→cols */
+  .footer__brand img{width:56px;margin-bottom:0}
+  .footer__brand-name{margin-top:24px}
+  .footer__brand-tag{margin-top:12px;font-size:13px;max-width:36ch}
+  /* PATCH 4: heading→list = 16px; item→item = 12px */
+  .footer__col-head{margin-bottom:16px;font-size:9.5px}
+  .footer__col ul{gap:12px}
+  .footer__col p + p{margin-top:12px}
   .footer__col a,.footer__col p{font-size:13px}
+  /* Email tight to its line, sized for tap target */
+  .footer__col__email{font-size:14px;padding:6px 0 8px;min-height:44px;margin-top:0}
+  /* PATCH 5: bottom row — social LEFT, © RIGHT, single row.
+     row-reverse so source-order (copy, social) renders visually as social-first */
   .footer__bottom{
-    padding:20px 0 24px;
-    flex-direction:column-reverse;align-items:flex-start;gap:18px;
+    padding:48px 0 24px;       /* 48px above content (under the cyan rule) */
+    flex-direction:row-reverse;
+    flex-wrap:nowrap;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
   }
   .footer__copy{font-size:9.5px;letter-spacing:.16em}
-  .footer__social a{width:34px;height:34px}
+  .footer__social{gap:10px}
+  .footer__social a{width:32px;height:32px}
+}
+/* PATCH 5 fallback — narrowest viewports allow wrap */
+@media (max-width:359px){
+  .footer__bottom{flex-wrap:wrap}
 }
 
 /* ============ MOMENT — full-bleed cinematic photo break ============ */
@@ -1922,7 +1930,6 @@ a{color:inherit;text-decoration:none}
       <nav class="footer__col" aria-label="Site">
         <h3 class="footer__col-head">Navigation</h3>
         <ul>
-          <li><a href="https://cairnsstingers.com.au/">Home</a></li>
           <li><a href="https://cairnsstingers.com.au/players/">Players</a></li>
           <li><a href="https://cairnsstingers.com.au/games/">Games</a></li>
           <li><a href="https://cairnsstingers.com.au/gallery/">Gallery</a></li>
