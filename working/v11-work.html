@@ -2757,41 +2757,35 @@ a{color:inherit;text-decoration:none}
     requestAnimationFrame(updateDots);
   }
 
-  // Slider autoplay — advance every 4s on mobile; pause on touch; resume after idle
-  let autoplayTimer = null;
-  let resumeTimer = null;
-  function advance(){
-    if (!mq.matches) return;
+  // Slider autoplay — single always-on interval. Each tick decides whether
+  // to actually advance based on viewport, mobile, tab visibility, and recent
+  // user interaction. Simpler and harder to break than the prior version.
+  let userInteractingUntil = 0;
+  function isSliderInViewport(){
+    const r = slider.getBoundingClientRect();
+    return r.top < window.innerHeight * 0.85 && r.bottom > window.innerHeight * 0.15;
+  }
+  function autoplayTick(){
+    if (!mq.matches) return;                          // desktop → skip
+    if (document.hidden) return;                      // tab in background → skip
+    if (Date.now() < userInteractingUntil) return;    // user touched recently → skip
+    if (!isSliderInViewport()) return;                // slider off-screen → skip
     const cardWidth = cards[0].offsetWidth;
-    slider.scrollBy({ left: cardWidth, behavior: 'smooth' });
+    if (!cardWidth) return;
+    // Advance to next card based on current scroll position (more reliable
+    // than scrollBy, which can compound during smooth-scroll animations).
+    const currentIdx = Math.round(slider.scrollLeft / cardWidth);
+    const targetLeft = (currentIdx + 1) * cardWidth;
+    slider.scrollTo({ left: targetLeft, behavior: 'smooth' });
   }
-  function startAutoplay(){
-    stopAutoplay();
-    if (!mq.matches) return;
-    autoplayTimer = setInterval(advance, 4000);
+  setInterval(autoplayTick, 4000);
+  // Direct slider interaction pauses autoplay for 7s
+  function flagUserInteraction(){
+    userInteractingUntil = Date.now() + 7000;
   }
-  function stopAutoplay(){
-    if (autoplayTimer) { clearInterval(autoplayTimer); autoplayTimer = null; }
-  }
-  function pauseAndScheduleResume(){
-    stopAutoplay();
-    clearTimeout(resumeTimer);
-    resumeTimer = setTimeout(startAutoplay, 7000);
-  }
-  // User interaction pauses autoplay
-  ['touchstart', 'mousedown', 'wheel'].forEach(evt => {
-    slider.addEventListener(evt, pauseAndScheduleResume, { passive: true });
+  ['touchstart', 'mousedown'].forEach(evt => {
+    slider.addEventListener(evt, flagUserInteraction, { passive: true });
   });
-  // Pause when slider isn't in viewport (start when it enters, stop when it leaves)
-  if ('IntersectionObserver' in window) {
-    const apIO = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) startAutoplay();
-        else stopAutoplay();
-      });
-    }, { threshold: 0.4 });
-    apIO.observe(slider);
-  }
 })();
 </script>
 
