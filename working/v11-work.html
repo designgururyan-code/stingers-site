@@ -1247,6 +1247,13 @@ a{color:inherit;text-decoration:none}
 .footer__col p{
   font-family:var(--sans);font-size:13.5px;color:var(--dim);
   line-height:1.4;margin:0;
+  padding-left:16px;position:relative;
+}
+/* Match the orange-line affordance the nav links have (visible always for info items) */
+.footer__col p::before{
+  content:"";
+  position:absolute;left:0;top:.65em;
+  width:10px;height:1px;background:var(--or);opacity:.55;
 }
 .footer__col p + p{margin-top:11px}
 .footer__col a.footer__col__email{
@@ -1298,13 +1305,8 @@ a{color:inherit;text-decoration:none}
     padding-bottom:48px;
   }
   .footer__brand{grid-column:1 / -1}
-  /* Training (4th child) and Contact (5th child) both span full width and
-     read as one "Find us" block. Contact heading hidden — email speaks for itself. */
-  .footer__top > :nth-child(4),
-  .footer__top > :nth-child(5){grid-column:1 / -1}
-  .footer__top > :nth-child(5){margin-top:-16px}
-  .footer__top > :nth-child(5) > .footer__col-head{display:none}
-  /* Email more prominent in the new "Find us" position; tight to the line above */
+  /* Clean 2×2 below brand: Nav | Training, then Get Involved | Contact */
+  /* Email tighter to its line, sized for tap target */
   .footer__col__email{font-size:14px;padding:6px 0 8px;min-height:44px;margin-top:0}
   .footer__brand{gap:14px}
   .footer__brand img{width:56px}
@@ -1926,6 +1928,13 @@ a{color:inherit;text-decoration:none}
         </ul>
       </nav>
 
+      <div class="footer__col">
+        <h3 class="footer__col-head">Training</h3>
+        <p>Wednesdays · 5pm</p>
+        <p>Watson's Oval #2, Manunda</p>
+        <p style="opacity:.6;font-size:12px;margin-top:10px">Check socials for updates</p>
+      </div>
+
       <nav class="footer__col" aria-label="Get involved">
         <h3 class="footer__col-head">Get Involved</h3>
         <ul>
@@ -1933,13 +1942,6 @@ a{color:inherit;text-decoration:none}
           <li><a href="https://cairnsstingers.com.au/sponsors/">Sponsorship</a></li>
         </ul>
       </nav>
-
-      <div class="footer__col">
-        <h3 class="footer__col-head">Training</h3>
-        <p>Wednesdays · 5pm</p>
-        <p>Watson's Oval #2, Manunda</p>
-        <p style="opacity:.6;font-size:12px;margin-top:10px">Check socials for updates</p>
-      </div>
 
       <div class="footer__col">
         <h3 class="footer__col-head">Contact</h3>
