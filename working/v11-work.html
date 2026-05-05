@@ -1454,6 +1454,82 @@ a{color:inherit;text-decoration:none}
   }
 }
 
+
+/* ===========================================================
+   MOBILE POLISH BATCH (placed last so cascade lands cleanly)
+   =========================================================== */
+
+/* 1. One section-padding rule across all four mobile sections */
+@media (max-width:680px){
+  .recruit, .about, .join, .sponsors{
+    padding:clamp(72px,14vw,120px) 0 !important;
+  }
+}
+
+/* 2. Section dividers — cyan rule (was white at 8%) at 12% */
+.recruit, .about, .moment, .join, .sponsors{
+  border-top-color:rgba(0,180,230,0.12) !important;
+}
+
+/* 3. Eyebrow → headline gap of 24px across every section on mobile */
+@media (max-width:680px){
+  .about__copy, .join__left{gap:24px}
+  .recruit__inner{gap:24px}
+  .sponsors__head{gap:24px}
+}
+
+/* 4. About body → CTA gap = 40px (parent gap is 24px, +16 inline-margin) */
+@media (max-width:680px){
+  .about__cta{margin-top:16px}
+}
+
+/* 5. Photo TBD pill hidden on mobile so it doesn't read like a placeholder bug */
+@media (max-width:560px){
+  .moment-card__photo__pill{display:none}
+}
+
+/* 6. Slider peek = 22% (cards at 78vw) */
+@media (max-width:560px){
+  .about__cards > .moment-card{flex:0 0 78vw;width:78vw}
+}
+
+/* 7. Slider dots indicator — 4 dots underneath, mobile only */
+.about__cards-dots{display:none}
+@media (max-width:560px){
+  .about__cards-dots{
+    display:flex;justify-content:center;align-items:center;gap:8px;
+    margin:18px 0 0;
+  }
+  .about__cards-dots span{
+    width:6px;height:6px;border-radius:50%;
+    background:var(--mute);opacity:.45;
+    transition:width .25s cubic-bezier(.16,.84,.3,1), opacity .25s ease, background .25s ease;
+  }
+  .about__cards-dots span.is-active{
+    background:var(--or);opacity:1;width:22px;border-radius:3px;
+  }
+}
+
+/* 8. Tap targets — 44px hit-zone for inline body links */
+.about__body a, .join__body a, .moment-card p a{
+  display:inline-block;min-height:44px;padding:8px 0;line-height:1.4;
+}
+
+/* 9. New moment__eyebrow — sits top-left of full-bleed photo */
+.moment__eyebrow{
+  position:absolute;top:20px;left:24px;z-index:3;
+  display:inline-flex;align-items:center;gap:10px;
+  font-family:var(--mono);font-size:11px;font-weight:600;
+  letter-spacing:.24em;text-transform:uppercase;color:var(--cy);
+  background:rgba(10,22,40,.55);
+  padding:7px 11px;border-radius:2px;
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+  border:1px solid rgba(0,180,230,0.2);
+}
+.moment__eyebrow .num{color:var(--or);font-weight:700}
+@media (max-width:560px){
+  .moment__eyebrow{top:16px;left:16px;font-size:10px;padding:6px 9px}
+}
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
 <script src="chrome-extension://liecbddmkiiihnedobmlmillhodjkdmb/js/recordConsoleEvents.js"></script></head>
@@ -1518,10 +1594,7 @@ a{color:inherit;text-decoration:none}
         <span class="num" id="chapNum">01</span>
         <span class="name swap" id="chapName">Train</span>
       </span>
-      <h1 class="wordmark">
-        <span class="line1">Bring the</span>
-        <span class="em swap" id="emWord">work</span>
-      </h1>
+      <h1 class="wordmark"><span class="line1">Bring the</span><span class="em swap" id="emWord">work</span></h1>
       <div class="subhead">
         <p class="tagline swap" id="tagline">Pre-season hamstring testers, the mid-week workout.</p>
         <div class="meta swap" id="meta"><span><b>Wed 5–6pm</b></span><span class="pip"></span><span>Watson's Oval #2</span><span class="pip"></span><span>Cairns North</span></div>
@@ -1662,11 +1735,12 @@ a{color:inherit;text-decoration:none}
       </div>
 
       <div class="about__copy">
-        <span class="about__eyebrow" data-reveal=""><span class="num">02</span>About the club</span>
+        <span class="about__eyebrow" data-reveal=""><span class="num">03</span>About the club</span>
         <h2 class="about__title" data-reveal="">More Than <br>a <span class="em">Team</span></h2>
         <div class="about__body" data-reveal="">
-          <p>The Stingers are AFL Masters in Cairns — over-35s footy that takes the game, and each other, seriously without taking ourselves too seriously.</p>
-          <p>Saturdays we pull on the jumper for the same reason: locals who'd otherwise never cross paths end up celebrating wins, copping losses, and walking off as mates.</p>
+          <p>The Stingers are AFL Masters in Cairns — over-35s footy.</p>
+          <p>We take the game and each other seriously. Not ourselves.</p>
+          <p>Saturdays we pull on the jumper for the same reason: locals who'd never cross paths walk off as mates.</p>
         </div>
         <a class="about__cta" href="https://cairnsstingers.com.au/sting/index.html#players" data-reveal="">
           View the squad
@@ -1725,12 +1799,14 @@ a{color:inherit;text-decoration:none}
 
       </div>
       <div class="about__cards-hint" aria-hidden="true">Swipe<span class="arr">→</span></div>
+      <div class="about__cards-dots" aria-hidden="true"><span class="is-active"></span><span></span><span></span><span></span></div>
     </div>
 
   </div>
 </section>
 
 <section class="moment" id="moment" aria-label="Cairns Stingers training">
+  <span class="moment__eyebrow" data-reveal=""><span class="num">04</span>The moment</span>
   <img class="moment__photo" src="https://cairnsstingers.com.au/sting/stingers-moment.jpg" alt="Cairns Stingers players walking together after training at Watson&#39;s Oval" data-reveal="">
   <span class="moment__caption" data-reveal="">
     Watson's Oval #2 <span class="dot" aria-hidden="true"></span> Wed 5pm
@@ -1744,8 +1820,8 @@ a{color:inherit;text-decoration:none}
   <div class="join__inner">
 
     <div class="join__left">
-      <span class="join__num" aria-hidden="true">03</span>
-      <span class="join__eyebrow" data-reveal=""><span class="num">03</span>Join the Stingers</span>
+      <span class="join__num" aria-hidden="true">05</span>
+      <span class="join__eyebrow" data-reveal=""><span class="num">05</span>Join the Stingers</span>
       <h2 class="join__title" data-reveal="">Ready to pull on<br class="join__title-break"> the <span class="em">jumper?</span></h2>
       <span class="join__sub" data-reveal="">Registrations open · 2026 Season</span>
     </div>
@@ -1779,7 +1855,7 @@ a{color:inherit;text-decoration:none}
 <section class="sponsors" id="sponsors" aria-labelledby="sponsors-title">
   <div class="sponsors__inner">
     <div class="sponsors__head">
-      <span class="sponsors__eyebrow" data-reveal=""><span class="num">04</span>Partners</span>
+      <span class="sponsors__eyebrow" data-reveal=""><span class="num">06</span>Partners</span>
       <h2 class="sponsors__title" id="sponsors-title" data-reveal="">Proudly <span class="em">Backed</span> By</h2>
       <p class="sponsors__sub" data-reveal="">Local businesses keeping community footy alive in Far North Queensland.</p>
     </div>
@@ -2651,6 +2727,26 @@ a{color:inherit;text-decoration:none}
   }
   setup();
   mq.addEventListener('change', setup);
+
+  // Slider dots indicator — updates as the user scrolls; works regardless of clones
+  const dotsEl = document.querySelector('.about__cards-dots');
+  if (dotsEl) {
+    const dots = dotsEl.querySelectorAll('span');
+    function updateDots(){
+      if (!mq.matches || dots.length === 0) return;
+      const viewportCenter = slider.scrollLeft + slider.clientWidth / 2;
+      let closestIdx = 0;
+      let closestDist = Infinity;
+      cards.forEach((card, i) => {
+        const center = card.offsetLeft + card.offsetWidth / 2;
+        const dist = Math.abs(center - viewportCenter);
+        if (dist < closestDist) { closestDist = dist; closestIdx = i; }
+      });
+      dots.forEach((d, i) => d.classList.toggle('is-active', i === closestIdx));
+    }
+    slider.addEventListener('scroll', updateDots, { passive: true });
+    requestAnimationFrame(updateDots);
+  }
 })();
 </script>
 
